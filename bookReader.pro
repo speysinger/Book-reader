@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,13 +27,19 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
     parsers/fb2parser.cpp \
+  parsers/rtfparser.cpp \
+  parsers/txtparser.cpp \
+  translate/translater.cpp \
     ui/mainwindow.cpp \
     ui/scrolledtextbrowser.cpp
 
 HEADERS += \
+    parsers/rtfparser.h \
+    parsers/txtparser.h \
     singleton.h \
     settings.h \
     parsers/fb2parser.h \
+    translate/translater.h \
     ui/mainwindow.h \
     ui/scrolledtextbrowser.h
 

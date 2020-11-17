@@ -8,6 +8,8 @@
 #include <QPushButton>
 
 #include "parsers/fb2parser.h"
+#include "parsers/rtfparser.h"
+#include "parsers/txtparser.h"
 #include "scrolledtextbrowser.h"
 
 MainWindow::MainWindow(QWidget* parent) : QWidget(parent) {
@@ -15,6 +17,9 @@ MainWindow::MainWindow(QWidget* parent) : QWidget(parent) {
   setLayout(layer);
 
   Fb2Parser* fb2Parser = new Fb2Parser();
+  TxtParser* txtParser = new TxtParser();
+  RtfParser* rtfParser = new RtfParser();
+
   ScrolledTextBrowser* textBrowser = new ScrolledTextBrowser;
 
   QPushButton* prevPage = new QPushButton("prevPage");
@@ -27,11 +32,18 @@ MainWindow::MainWindow(QWidget* parent) : QWidget(parent) {
 
   QLabel* label = new QLabel();
 
-  QString fileName =
-      QFileDialog::getOpenFileName(this, tr("Выберите книгу"), "",
-                                   tr("Формат книги (*.fb2);;All Files (*)"));
+  QString fileName = QFileDialog::getOpenFileName(
+      this, tr("Выберите книгу"), "",
+      tr("Формат книги (*.fb2, *.txt, *.rtf);;All Files (*)"));
+  QString book;
 
-  QString book = fb2Parser->parseFile(fileName);
+  if (fileName.contains(".fb2")) {
+    book = fb2Parser->parseFile(fileName);
+  } else if (fileName.contains(".txt")) {
+    book = txtParser->parseFile(fileName);
+  } else if (fileName.contains(".rtf")) {
+    book = rtfParser->parseFile(fileName);
+  }
   textBrowser->setHtml(book);
 
   int pagesCount = textBrowser->getPagesCount();

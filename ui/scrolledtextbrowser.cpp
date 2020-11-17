@@ -1,13 +1,38 @@
 #include "scrolledtextbrowser.h"
 
 #include <qcoreapplication.h>
+#include <qmessagebox.h>
 
+#include <QDebug>
 #include <QMouseEvent>
 #include <QScrollBar>
 #include <QStyle>
 
 ScrolledTextBrowser::ScrolledTextBrowser(QWidget* parent)
-    : QTextBrowser(parent), m_cursorPos_y(0) {}
+    : QTextBrowser(parent), m_cursorPos_y(0) {
+  connect(&translater, SIGNAL(translated(QByteArray&)), this,
+          SLOT(showTranslatedText(QByteArray&)));
+}
+
+void ScrolledTextBrowser::mouseReleaseEvent(QMouseEvent* event) {
+  QString selectedText = this->textCursor().selectedText();
+  if (selectedText.length() > 1) {
+    qDebug() << selectedText;
+    translater.translate("hello");
+  } else
+    qDebug() << "ничего";
+}
+
+void ScrolledTextBrowser::showTranslatedText(QByteArray& data) {
+  qDebug() << data;
+  QString text = QString::fromStdString(data.toStdString());
+
+  QMessageBox* msgbox = new QMessageBox(this);
+  msgbox->setWindowTitle("Note");
+  msgbox->setText("Successfully copied item foobar");
+  msgbox->open();
+  qDebug() << text;
+}
 
 int ScrolledTextBrowser::getPagesCount() {
   // todo: pagescount
